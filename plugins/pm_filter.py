@@ -9,7 +9,7 @@ import pyrogram
 from database.connections_mdb import active_connection, all_connections, delete_connection, if_active, make_active, \
     make_inactive
 from info import ADMINS, AUTH_CHANNEL, AUTH_USERS, CUSTOM_FILE_CAPTION, AUTH_GROUPS, P_TTI_SHOW_OFF, IMDB, \
-    SINGLE_BUTTON, SPELL_CHECK_REPLY, IMDB_TEMPLATE
+    SINGLE_BUTTON, SPELL_CHECK_REPLY, IMDB_TEMPLATE, DROPLINK_API
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid
@@ -22,6 +22,8 @@ from database.filters_mdb import (
     get_filters,
 )
 import logging
+import aiohttp
+import pyshorteners
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
@@ -64,20 +66,21 @@ async def next_page(bot, query):
         btn = [
             [
                 InlineKeyboardButton(
-                    text=f"[{get_size(file.file_size)}] {file.file_name}", callback_data=f'files#{file.file_id}'
+                    text=f"[{get_size(file.file_size)}] {file.file_name}", url=await get_shortlink(f"https://t.me/{temp.U_NAME}?start=files#{file.file_id}")
                 ),
             ]
             for file in files
         ]
     else:
+        
         btn = [
             [
                 InlineKeyboardButton(
-                    text=f"{file.file_name}", callback_data=f'files#{file.file_id}'
+                    text=f"{file.file_name}", url=await get_shortlink(f"https://t.me/{temp.U_NAME}?start=files#{file.file_id}")
                 ),
                 InlineKeyboardButton(
                     text=f"{get_size(file.file_size)}",
-                    callback_data=f'files_#{file.file_id}',
+                    url=await get_shortlink(f"https://t.me/{temp.U_NAME}?start=files#{file.file_id}"),
                 ),
             ]
             for file in files
@@ -640,7 +643,7 @@ async def auto_filter(client, msg, spoll=False):
         btn = [
             [
                 InlineKeyboardButton(
-                    text=f"[{get_size(file.file_size)}] {file.file_name}", callback_data=f'{pre}#{file.file_id}'
+                    text=f"[{get_size(file.file_size)}] {file.file_name}", url=await get_shortlink(f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}")
                 ),
             ]
             for file in files
@@ -650,11 +653,11 @@ async def auto_filter(client, msg, spoll=False):
             [
                 InlineKeyboardButton(
                     text=f"{file.file_name}",
-                    callback_data=f'{pre}#{file.file_id}',
+                    url=await get_shortlink(f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}"),
                 ),
                 InlineKeyboardButton(
                     text=f"{get_size(file.file_size)}",
-                    callback_data=f'{pre}#{file.file_id}',
+                    url=await get_shortlink(f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}"),
                 ),
             ]
             for file in files
@@ -826,3 +829,38 @@ async def manual_filters(client, message, text=False):
                 break
     else:
         return False
+
+
+####################  droplink  ####################
+async def get_shortlink(link, x=""):
+	https = link.split(":")[0]
+	if "http" == https:
+		https = "https"
+		link = link.replace("http", https)
+	url = f'https://droplink.co/api'
+	params = {'api': DROPLINK_API,
+			  'url': link,
+			  'alias': x
+			  }
+
+	try:
+		async with aiohttp.ClientSession() as session:
+			async with session.get(url, params=params, raise_for_status=True, ssl=False) as response:
+				data = await response.json()
+				if data["status"] == "success":
+					return data['shortenedUrl']
+				else:
+					return f"Error: {data['message']}"
+
+	except Exception as e:
+		print(e)
+		links = f'https://droplink.co/st?api={DROPLINK_API}&url={link}'
+		return await tiny_url_main(links)
+
+
+# Incase droplink server fails, bot will return https://droplink.co/st?api={DROPLINK_API}&url={link} 
+
+# TinyUrl 
+async def tiny_url_main(url):
+	s = pyshorteners.Shortener()
+	return s.tinyurl.short(url)
