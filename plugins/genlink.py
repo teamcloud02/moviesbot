@@ -130,4 +130,4 @@ async def gen_link_batch(bot, message):
 @Client.on_message(filters.command('short'))
 async def function_short_link(c: Client, m: Message):
     link = m.command[1]
-    return await get_shortlink(link)
+    return m.reply(await get_shortlink(link), quote=True)
