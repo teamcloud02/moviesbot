@@ -16,7 +16,7 @@ import re
 import json
 import base64
 logger = logging.getLogger(__name__)
-from pm_filter import get_shortlink
+from .pm_filter import get_shortlink
 
 BATCH_FILES = {}
 
