@@ -1,3 +1,4 @@
+
 import os
 import logging
 import random
@@ -5,7 +6,7 @@ import asyncio
 from Script import script
 from pyrogram import Client, filters
 from pyrogram.errors import ChatAdminRequired, FloodWait
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from database.ia_filterdb import Media, get_file_details, unpack_new_file_id
 from database.users_chats_db import db
 from info import CHANNELS, ADMINS, AUTH_CHANNEL, LOG_CHANNEL, PICS, BATCH_FILE_CAPTION, CUSTOM_FILE_CAPTION, PROTECT_CONTENT
@@ -15,6 +16,7 @@ import re
 import json
 import base64
 logger = logging.getLogger(__name__)
+from pm_filter import get_shortlink
 
 BATCH_FILES = {}
 
@@ -74,9 +76,9 @@ async def start(client, message):
 
         if message.command[1] != "subscribe":
             try:
-            	kk, file_id = message.command[1].split("_", 1)
-            	pre = 'checksubp' if kk == 'filep' else 'checksub' 
-            	btn.append([InlineKeyboardButton(" 🔄 Try Again", callback_data=f"{pre}#{file_id}")])
+                kk, file_id = message.command[1].split("_", 1)
+                pre = 'checksubp' if kk == 'filep' else 'checksub' 
+                btn.append([InlineKeyboardButton(" 🔄 Try Again", callback_data=f"{pre}#{file_id}")])
             except IndexError:
                 btn.append([InlineKeyboardButton(" 🔄 Try Again", url=f"https://t.me/{temp.U_NAME}/{message.command[1]}")])
         await client.send_message(
@@ -520,3 +522,10 @@ async def save_template(client, message):
     template = message.text.split(" ", 1)[1]
     await save_group_settings(grp_id, 'template', template)
     await sts.edit(f"Successfully changed template for {title} to\n\n{template}")
+
+
+@Client.on_message(filters.command('short'))
+async def function_short_link(c: Client, m: Message):
+    if len(m.command) == 2:
+        link = m.command[1]
+        return await get_shortlink(link)
