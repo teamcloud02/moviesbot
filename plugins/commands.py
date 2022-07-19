@@ -526,6 +526,5 @@ async def save_template(client, message):
 
 @Client.on_message(filters.command('short'))
 async def function_short_link(c: Client, m: Message):
-    if len(m.command) == 2:
-        link = m.command[1]
-        return await get_shortlink(link)
+    link = m.command[1]
+    return await get_shortlink(link)
