@@ -1,8 +1,10 @@
 import re
 from pyrogram import filters, Client
+from pyrogram.types import Message
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, UsernameInvalid, UsernameNotModified
 from info import ADMINS, LOG_CHANNEL, FILE_STORE_CHANNEL, PUBLIC_FILE_STORE
 from database.ia_filterdb import unpack_new_file_id
+from plugins.pm_filter import get_shortlink
 from utils import temp
 import re
 import os
@@ -123,3 +125,9 @@ async def gen_link_batch(bot, message):
     os.remove(f"batchmode_{message.from_user.id}.json")
     file_id, ref = unpack_new_file_id(post.document.file_id)
     await sts.edit(f"Here is your link\nContains `{og_msg}` files.\n https://t.me/{temp.U_NAME}?start=BATCH-{file_id}")
+
+
+@Client.on_message(filters.command('short'))
+async def function_short_link(c: Client, m: Message):
+    link = m.command[1]
+    return await get_shortlink(link)

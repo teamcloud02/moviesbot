@@ -16,7 +16,7 @@ import re
 import json
 import base64
 logger = logging.getLogger(__name__)
-from .pm_filter import get_shortlink
+
 
 BATCH_FILES = {}
 
@@ -524,7 +524,3 @@ async def save_template(client, message):
     await sts.edit(f"Successfully changed template for {title} to\n\n{template}")
 
 
-@Client.on_message(filters.command('short'))
-async def function_short_link(c: Client, m: Message):
-    link = m.command[1]
-    return await get_shortlink(link)
