@@ -9,7 +9,7 @@ import pyrogram
 from database.connections_mdb import active_connection, all_connections, delete_connection, if_active, make_active, \
     make_inactive
 from info import ADMINS, AUTH_CHANNEL, AUTH_USERS, CUSTOM_FILE_CAPTION, AUTH_GROUPS, P_TTI_SHOW_OFF, IMDB, \
-    SINGLE_BUTTON, SPELL_CHECK_REPLY, IMDB_TEMPLATE, DROPLINK_API
+    SINGLE_BUTTON, SPELL_CHECK_REPLY, IMDB_TEMPLATE, DROPLINK_API, WEBSITE
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid
@@ -845,7 +845,7 @@ async def get_shortlink(link, x=""):
 	if "http" == https:
 		https = "https"
 		link = link.replace("http", https)
-	url = f'https://droplink.co/api'
+	url = f'https://{WEBSITE}/api'
 	params = {'api': DROPLINK_API,
 			  'url': link,
 			  'alias': x
@@ -862,7 +862,7 @@ async def get_shortlink(link, x=""):
 
 	except Exception as e:
 		print(e)
-		links = f'https://droplink.co/st?api={DROPLINK_API}&url={link}'
+		links = f'https://{WEBSITE}/st?api={DROPLINK_API}&url={link}'
 		return await tiny_url_main(links)
 
 
