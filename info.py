@@ -24,22 +24,22 @@ USE_CAPTION_FILTER = bool(environ.get('USE_CAPTION_FILTER', False))
 PICS = "https://telegra.ph/thnx-06-28-3"
 
 # Admins, Channels & Users
-ADMINS = 1367267970 1402226756
-CHANNELS = -1001742921739 -1001556163470 2095795526 -1001570361978
+ADMINS = "1367267970 1402226756"
+CHANNELS = "-1001742921739 -1001556163470 2095795526 -1001570361978"
 auth_users = [int(user) if id_pattern.search(user) else user for user in environ.get('AUTH_USERS', '').split()]
 AUTH_USERS = (auth_users + ADMINS) if auth_users else []
 auth_channel = environ.get('AUTH_CHANNEL')
 auth_grp = environ.get('AUTH_GROUP')
-AUTH_CHANNEL = -1001779034461
+AUTH_CHANNEL = "-1001779034461"
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
 
 # MongoDB information
-DATABASE_URI = mongodb+srv://Dpkrkteam:Dpkrkteam@cluster0.rdv8tbm.mongodb.net/?retryWrites=true&w=majority
-DATABASE_NAME = project0
+DATABASE_URI = "mongodb+srv://Dpkrkteam:Dpkrkteam@cluster0.rdv8tbm.mongodb.net/?retryWrites=true&w=majority"
+DATABASE_NAME = "project0"
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
 
 # Others
-LOG_CHANNEL = -1001702481840
+LOG_CHANNEL = "-1001702481840"
 SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'TeamEvamaria')
 P_TTI_SHOW_OFF = is_enabled((environ.get('P_TTI_SHOW_OFF', "False")), False)
 IMDB = is_enabled((environ.get('IMDB', "True")), True)
