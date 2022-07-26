@@ -21,7 +21,7 @@ BOT_TOKEN = "5583420523:AAHkbjgYN7u9z7eHQwbxppIqoC4OGun0WMM"
 # Bot settings
 CACHE_TIME = int(environ.get('CACHE_TIME', 300))
 USE_CAPTION_FILTER = bool(environ.get('USE_CAPTION_FILTER', False))
-PICS = https://telegra.ph/thnx-06-28-3
+PICS = "https://telegra.ph/thnx-06-28-3"
 
 # Admins, Channels & Users
 ADMINS = 1367267970 1402226756
