@@ -69,5 +69,5 @@ LOG_STR += f"Your current IMDB template is {IMDB_TEMPLATE}"
 
 # Custom
 
-DROPLINK_API = environ.get('DROPLINK_API', False)
+DROPLINK_API = "dd6070747bae8e0f9143480dab4e72cde9c2f5ae"
 WEBSITE = environ.get('WEBSITE', 'droplink.co')
